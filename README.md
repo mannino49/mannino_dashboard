@@ -2,6 +2,8 @@
 
 A minimalist web-based dashboard designed to help track daily routines, priorities, and maintain focus throughout the day.
 
+**Live Site:** [https://mellifluous-hamster-9051b0.netlify.app/](https://mellifluous-hamster-9051b0.netlify.app/)
+
 ## Features
 
 - **Header Section**: Date display, mood selector, and energy level slider
