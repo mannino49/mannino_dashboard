@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michael's Focus + Motivation Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Navigation Bar -->
+        <nav class="dashboard-nav">
+            <div class="nav-section">
+                <button id="today-btn" class="nav-btn active">Today</button>
+                <button id="history-btn" class="nav-btn">History</button>
+                <button id="stats-btn" class="nav-btn">Statistics</button>
+            </div>
+            <div class="date-picker-container">
+                <input type="text" id="date-picker" placeholder="Select date..." readonly>
+            </div>
+        </nav>
+        <!-- Header Section -->
+        <header class="dashboard-header">
+            <div class="date-display">
+                <i class="fas fa-calendar-day"></i>
+                <span id="current-date">Loading date...</span>
+            </div>
+            <div class="mood-selector">
+                <span>🌞 Mood: </span>
+                <div class="emoji-options">
+                    <span class="emoji" data-mood="happy">😌</span>
+                    <span class="emoji" data-mood="neutral">😐</span>
+                    <span class="emoji" data-mood="stressed">😫</span>
+                </div>
+            </div>
+            <div class="energy-selector">
+                <span>⚡ Energy: </span>
+                <input type="range" min="1" max="5" value="3" class="slider" id="energy-slider">
+                <span id="energy-value">3</span>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <!-- Morning Routine Tracker -->
+            <section class="dashboard-section morning-routine">
+                <h2>🕒 Morning Routine Tracker</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="routine-progress"></div>
+                </div>
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="hydrate" class="routine-item">
+                        <label for="hydrate">💧 Hydrate</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="breathe" class="routine-item">
+                        <label for="breathe">🧘 Breathe + center</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="movement" class="routine-item">
+                        <label for="movement">🏃 Light movement</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="clarity" class="routine-item">
+                        <label for="clarity">🔍 3x3 clarity (gratitude / priorities / emotional state)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="spiritual" class="routine-item">
+                        <label for="spiritual">🙏 Spiritual check-in</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top 3 Priorities Block -->
+            <section class="dashboard-section priorities">
+                <h2>📝 Top 3 Priorities</h2>
+                <div class="priority-item">
+                    <span>👉 #1:</span>
+                    <input type="text" id="priority-1" placeholder="Enter priority #1">
+                    <button class="mark-done" data-priority="1">Done</button>
+                </div>
+                <div class="priority-item">
+                    <span>👉 #2:</span>
+                    <input type="text" id="priority-2" placeholder="Enter priority #2">
+                    <button class="mark-done" data-priority="2">Done</button>
+                </div>
+                <div class="priority-item">
+                    <span>👉 #3:</span>
+                    <input type="text" id="priority-3" placeholder="Enter priority #3">
+                    <button class="mark-done" data-priority="3">Done</button>
+                </div>
+            </section>
+
+            <!-- Calendar Snapshot -->
+            <section class="dashboard-section calendar">
+                <h2>⏰ Today's Calendar Snapshot</h2>
+                <div class="calendar-block">
+                    <div class="calendar-item green">
+                        <span>🟢 Morning Focus Block (8–11):</span>
+                        <input type="text" id="morning-block" placeholder="Enter focus task">
+                    </div>
+                    <div class="calendar-item yellow">
+                        <span>🟡 Midday Admin Block (11–1):</span>
+                        <input type="text" id="midday-block" placeholder="Enter admin tasks">
+                    </div>
+                    <div class="calendar-item blue">
+                        <span>🔵 Afternoon Action Block (2–4):</span>
+                        <input type="text" id="afternoon-block" placeholder="Enter action items">
+                    </div>
+                    <div class="calendar-item orange">
+                        <span>🟠 Email sweep:</span>
+                        <div class="email-checks">
+                            <label>
+                                <input type="checkbox" id="midday-email">
+                                Midday
+                            </label>
+                            <label>
+                                <input type="checkbox" id="eod-email">
+                                End-of-day
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inbox Triage -->
+            <section class="dashboard-section inbox">
+                <h2>📬 Inbox Triage Count</h2>
+                <div class="inbox-item">
+                    <span>📥 Emails flagged for reply today:</span>
+                    <input type="number" id="flagged-emails" min="0" value="0">
+                </div>
+                <div class="inbox-item">
+                    <span>📌 Critical emails handled:</span>
+                    <input type="number" id="handled-emails" min="0" value="0">
+                    <span>/</span>
+                    <input type="number" id="total-critical-emails" min="0" value="0">
+                </div>
+            </section>
+
+            <!-- Reset & Check-in -->
+            <section class="dashboard-section reset">
+                <h2>💡 Reset + Check-in Reminder</h2>
+                <div class="reset-timer">
+                    <span>💬 Next reset in: </span>
+                    <span id="reset-countdown">25</span>
+                    <span> min</span>
+                </div>
+                <button id="reset-button">RESET</button>
+            </section>
+
+            <!-- Evening Wind-down -->
+            <section class="dashboard-section evening">
+                <h2>🌙 Evening Wind-Down</h2>
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="reading" class="evening-item">
+                        <label for="reading">📚 10 min reading</label>
+                    </div>
+                    <div class="checklist-item brain-dump">
+                        <label for="brain-dump">🧠 Brain dump:</label>
+                        <textarea id="brain-dump" placeholder="What's on my mind?"></textarea>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="plan-tomorrow" class="evening-item">
+                        <label for="plan-tomorrow">📋 Plan top 3 for tomorrow</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Weekly Stats Panel -->
+            <section class="dashboard-section stats">
+                <h2>📈 Weekly Streaks / Stats</h2>
+                <div class="stat-item">
+                    <span>🌅 Morning routine % completed this week:</span>
+                    <span id="routine-percentage">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span>🔑 Priorities hit:</span>
+                    <span id="priorities-hit">0/0</span>
+                </div>
+                <div class="stat-item">
+                    <span>⚡ Flow / focus self-rating (avg):</span>
+                    <span id="focus-rating">0/5</span>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- History View -->
+    <div id="history-view" class="dashboard-view" style="display: none;">
+        <div class="history-container">
+            <h2>Historical Data</h2>
+            <div class="history-list" id="history-dates-list">
+                <!-- Dates will be populated here -->
+            </div>
+            <div class="history-details" id="history-details">
+                <!-- Selected day details will be shown here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics View -->
+    <div id="stats-view" class="dashboard-view" style="display: none;">
+        <div class="stats-container">
+            <h2>Dashboard Statistics</h2>
+            
+            <div class="stats-period-selector">
+                <button class="period-btn active" data-period="week">Week</button>
+                <button class="period-btn" data-period="month">Month</button>
+                <button class="period-btn" data-period="all">All Time</button>
+            </div>
+            
+            <div class="stats-charts">
+                <div class="chart-container">
+                    <h3>Mood Trends</h3>
+                    <canvas id="mood-chart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Energy Levels</h3>
+                    <canvas id="energy-chart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Morning Routine Completion</h3>
+                    <canvas id="routine-chart"></canvas>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Priority Completion Rate</h3>
+                    <canvas id="priority-chart"></canvas>
+                </div>
+            </div>
+            
+            <div class="stats-averages">
+                <h3>Averages</h3>
+                <div class="averages-grid">
+                    <div class="average-item">
+                        <span class="average-label">Average Energy Level:</span>
+                        <span id="avg-energy" class="average-value">0</span>
+                    </div>
+                    <div class="average-item">
+                        <span class="average-label">Morning Routine Completion:</span>
+                        <span id="avg-routine" class="average-value">0%</span>
+                    </div>
+                    <div class="average-item">
+                        <span class="average-label">Priority Completion Rate:</span>
+                        <span id="avg-priorities" class="average-value">0%</span>
+                    </div>
+                    <div class="average-item">
+                        <span class="average-label">Most Common Mood:</span>
+                        <span id="common-mood" class="average-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
